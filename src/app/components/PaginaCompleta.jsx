@@ -1,21 +1,25 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Contacto from './Contacto';
 import Loader from './Loader';
 import Navbar from './Navbar';
 import Hero from './Hero';
 import Catalogo from './Catalogo';
 import Carrito from './Carrito';
+import Contacto from './Contacto';
 import Footer from './Footer';
 
 export default function PaginaCompleta({ categoriaInicial = 'todos' }) {
   const [loading, setLoading] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [categoria, setCategoria] = useState(categoriaInicial);
   const [carrito, setCarrito] = useState([]);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 2000);
+    setTimeout(() => {
+      setLoading(false);
+      setVisible(true);
+    }, 2000);
   }, []);
 
   useEffect(() => {
@@ -41,16 +45,18 @@ export default function PaginaCompleta({ categoriaInicial = 'todos' }) {
   return (
     <main>
       {loading && <Loader />}
-      <Navbar carrito={carrito} scrolled={scrolled} />
-      <Hero scrolled={scrolled} />
-      <Catalogo
-        categoria={categoria}
-        cambiarCategoria={cambiarCategoria}
-        agregarAlCarrito={agregarAlCarrito}
-      />
-      <Carrito carrito={carrito} />
-      <Contacto />
-      <Footer />
+      <div style={{opacity: visible ? 1 : 0, transition: 'opacity 0.5s ease'}}>
+        <Navbar carrito={carrito} scrolled={scrolled} />
+        <Hero scrolled={scrolled} />
+        <Catalogo
+          categoria={categoria}
+          cambiarCategoria={cambiarCategoria}
+          agregarAlCarrito={agregarAlCarrito}
+        />
+        <Carrito carrito={carrito} />
+        <Contacto />
+        <Footer />
+      </div>
     </main>
   );
 }

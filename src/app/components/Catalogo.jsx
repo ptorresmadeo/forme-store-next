@@ -62,14 +62,14 @@ function Catalogo({ categoria, cambiarCategoria, agregarAlCarrito }) {
       <section className="categorias" id="categorias" aria-label="Categorías">
  <button
   className={`cat-btn ${categoria === 'him' ? 'activo' : ''}`}
-  onClick={() => cambiarCategoria('him')}
+  onClick={() => { cambiarCategoria('him'); router.replace('/productos/him', { scroll: false }); }}
   style={categoria === 'him' ? {fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '4px', fontSize: '16px'} : {}}
 >
   <span className="cat-label">FOR HIM</span>
 </button>
 <button
   className={`cat-btn ${categoria === 'her' ? 'activo' : ''}`}
-  onClick={() => cambiarCategoria('her')}
+  onClick={() => { cambiarCategoria('her'); router.replace('/productos/her', { scroll: false }); }}
   style={categoria === 'her' ? {fontFamily: "'Cormorant Garamond', serif", letterSpacing: '4px', fontSize: '16px'} : {}}
 >
   <span className="cat-label">FOR HER</span>

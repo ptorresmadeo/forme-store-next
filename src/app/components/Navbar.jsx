@@ -6,7 +6,7 @@ function Navbar({ carrito, scrolled }) {
       <div className={`navbar-logo-wrap ${scrolled ? 'scrolled' : ''}`}>
         <img src="/logo.png" alt="For Me Studios" className="navbar-logo-img" />
       </div>
-      <nav role="navigation" aria-label="Menú principal">
+      <nav className={scrolled ? 'oculto-mobile' : ''} role="navigation" aria-label="Menú principal">
         <ul>
           <li><a href="#categorias">DROP</a></li>
           <li><a href="#productos">STORE</a></li>

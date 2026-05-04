@@ -881,3 +881,13 @@ footer {
 .navbar-placeholder {
   height: 65px;
 }
+@media (max-width: 768px) {
+  .navbar nav {
+    transition: opacity 0.3s ease;
+  }
+  
+  .navbar nav.oculto-mobile {
+    opacity: 0;
+    pointer-events: none;
+  }
+}

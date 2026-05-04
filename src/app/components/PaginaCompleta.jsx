@@ -9,19 +9,20 @@ import Contacto from './Contacto';
 import Footer from './Footer';
 
 export default function PaginaCompleta({ categoriaInicial = 'todos' }) {
-  const [loading, setLoading] = useState(true);
-  const [visible, setVisible] = useState(false);
+    const [loading, setLoading] = useState(categoriaInicial === 'todos');
+    const [visible, setVisible] = useState(categoriaInicial !== 'todos');
   const [categoria, setCategoria] = useState(categoriaInicial);
   const [carrito, setCarrito] = useState([]);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+  if (categoriaInicial === 'todos') {
     setTimeout(() => {
       setLoading(false);
       setVisible(true);
     }, 2000);
-  }, []);
-
+  }
+}, []);
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', handleScroll);

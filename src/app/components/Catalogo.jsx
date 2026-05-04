@@ -60,20 +60,20 @@ function Catalogo({ categoria, cambiarCategoria, agregarAlCarrito }) {
   return (
     <div>
       <section className="categorias" id="categorias" aria-label="Categorías">
-  <button
-    className={`cat-btn ${categoria === 'him' ? 'activo' : ''}`}
-    onClick={() => { cambiarCategoria('him'); router.push('/productos/him'); }}
-    style={categoria === 'him' ? {fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '4px', fontSize: '16px'} : {}}
-  >
-    <span className="cat-label">FOR HIM</span>
-  </button>
-  <button
-    className={`cat-btn ${categoria === 'her' ? 'activo' : ''}`}
-    onClick={() => { cambiarCategoria('her'); router.push('/productos/her'); }}
-    style={categoria === 'her' ? {fontFamily: "'Cormorant Garamond', serif", letterSpacing: '4px', fontSize: '16px'} : {}}
-  >
-    <span className="cat-label">FOR HER</span>
-  </button>
+ <button
+  className={`cat-btn ${categoria === 'him' ? 'activo' : ''}`}
+  onClick={() => cambiarCategoria('him')}
+  style={categoria === 'him' ? {fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '4px', fontSize: '16px'} : {}}
+>
+  <span className="cat-label">FOR HIM</span>
+</button>
+<button
+  className={`cat-btn ${categoria === 'her' ? 'activo' : ''}`}
+  onClick={() => cambiarCategoria('her')}
+  style={categoria === 'her' ? {fontFamily: "'Cormorant Garamond', serif", letterSpacing: '4px', fontSize: '16px'} : {}}
+>
+  <span className="cat-label">FOR HER</span>
+</button>
   <button
     className={`cat-btn ${categoria === 'todos' ? 'activo' : ''}`}
     onClick={() => cambiarCategoria('todos')}

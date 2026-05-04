@@ -76,7 +76,7 @@ function Catalogo({ categoria, cambiarCategoria, agregarAlCarrito }) {
 </button>
   <button
     className={`cat-btn ${categoria === 'todos' ? 'activo' : ''}`}
-    onClick={() => cambiarCategoria('todos')}
+    onClick={() => { cambiarCategoria('todos'); router.replace('/productos', { scroll: false }); }}
   >
     <span className="cat-label">VER TODO</span>
   </button>

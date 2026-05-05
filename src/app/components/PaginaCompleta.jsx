@@ -54,7 +54,7 @@ export default function PaginaCompleta({ categoriaInicial = 'todos' }) {
           cambiarCategoria={cambiarCategoria}
           agregarAlCarrito={agregarAlCarrito}
         />
-        <Carrito carrito={carrito} />
+        <Carrito carrito={carrito} setCarrito={setCarrito} />
         <Contacto />
         <Footer />
       </div>

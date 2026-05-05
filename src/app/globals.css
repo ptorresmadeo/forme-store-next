@@ -891,3 +891,39 @@ footer {
     pointer-events: none;
   }
 }
+.btn-eliminar {
+  background: transparent;
+  border: 1px solid var(--borde);
+  color: var(--gris);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-eliminar:hover {
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
+.btn-vaciar {
+  background: transparent;
+  border: 1px solid var(--borde);
+  color: var(--gris);
+  padding: 6px 14px;
+  font-size: 10px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-vaciar:hover {
+  border-color: #c0392b;
+  color: #c0392b;
+}

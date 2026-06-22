@@ -1,4 +1,9 @@
-function Hero({ scrolled }) {
+'use client';
+import { useScrolled } from '../hooks/useScrolled';
+
+function Hero() {
+  const scrolled = useScrolled(80);
+
   return (
     <section className="hero" aria-label="Sección principal">
       <video className="hero-video" autoPlay muted loop playsInline>

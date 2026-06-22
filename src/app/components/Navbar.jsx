@@ -1,20 +1,27 @@
-function Navbar({ carrito, scrolled }) {
-  const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+'use client';
+import Link from 'next/link';
+import { useCart } from '../context/CartContext';
+import { useScrolled } from '../hooks/useScrolled';
+
+function Navbar() {
+  const { totalItems } = useCart();
+  const scrolled = useScrolled(80);
 
   return (
     <header className="navbar" role="banner">
       <div className={`navbar-logo-wrap ${scrolled ? 'scrolled' : ''}`}>
-        <img src="/logo.png" alt="For Me Studios" className="navbar-logo-img" />
+        <Link href="/" aria-label="Ir al inicio">
+          <img src="/logo.png" alt="For Me Studios" className="navbar-logo-img" />
+        </Link>
       </div>
       <nav className={scrolled ? 'oculto-mobile' : ''} role="navigation" aria-label="Menú principal">
         <ul>
-          <li><a href="#categorias">DROP</a></li>
-          <li><a href="#productos">STORE</a></li>
+          <li><Link href="/productos">STORE</Link></li>
           <li><a href="#contacto">CONTACTO</a></li>
           <li>
-            <a href="#carrito" aria-label="Carrito de compras">
+            <Link href="/cart" aria-label="Ver carrito de compras">
               CART ({totalItems})
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>

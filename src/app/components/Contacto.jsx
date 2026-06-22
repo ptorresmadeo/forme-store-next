@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 
 function Contacto() {
@@ -39,49 +40,51 @@ function Contacto() {
 
   return (
     <section className="contacto" id="contacto" aria-label="Formulario de contacto">
-      <h2>CONTACTO</h2>
-      {enviado ? (
-        <p className="enviado">¡Mensaje enviado! Nos contactamos pronto.</p>
-      ) : (
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="nombre">Nombre</label>
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              value={form.nombre}
-              onChange={handleChange}
-              placeholder="Tu nombre"
-            />
-            {errores.nombre && <span className="error">{errores.nombre}</span>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder="tu@email.com"
-            />
-            {errores.email && <span className="error">{errores.email}</span>}
-          </div>
-          <div className="form-group">
-            <label htmlFor="mensaje">Mensaje</label>
-            <textarea
-              id="mensaje"
-              name="mensaje"
-              value={form.mensaje}
-              onChange={handleChange}
-              placeholder="Tu mensaje..."
-            />
-            {errores.mensaje && <span className="error">{errores.mensaje}</span>}
-          </div>
-          <button type="submit" className="btn-primary">ENVIAR</button>
-        </form>
-      )}
+      <div className="contacto-inner">
+        <h2>CONTACTO</h2>
+        {enviado ? (
+          <p className="enviado">¡Mensaje enviado! Nos contactamos pronto.</p>
+        ) : (
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="form-group">
+              <label htmlFor="nombre">Nombre</label>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                value={form.nombre}
+                onChange={handleChange}
+                placeholder="Tu nombre"
+              />
+              {errores.nombre && <span className="error">{errores.nombre}</span>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="tu@email.com"
+              />
+              {errores.email && <span className="error">{errores.email}</span>}
+            </div>
+            <div className="form-group">
+              <label htmlFor="mensaje">Mensaje</label>
+              <textarea
+                id="mensaje"
+                name="mensaje"
+                value={form.mensaje}
+                onChange={handleChange}
+                placeholder="Tu mensaje..."
+              />
+              {errores.mensaje && <span className="error">{errores.mensaje}</span>}
+            </div>
+            <button type="submit" className="btn-primary">ENVIAR</button>
+          </form>
+        )}
+      </div>
     </section>
   );
 }

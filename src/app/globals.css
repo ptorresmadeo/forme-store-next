@@ -770,6 +770,18 @@ h1 span {
   margin-top: 24px;
 }
 
+.cart-page-checkout {
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px;
+  font-size: 12px;
+}
+
+.cart-page-error-pago {
+  text-align: center;
+  margin-top: 12px;
+}
+
 .carrito-vacio {
   color: var(--gris);
   font-size: 13px;

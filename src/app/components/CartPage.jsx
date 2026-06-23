@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '../context/CartContext';
 
@@ -21,6 +22,39 @@ function CartPage() {
   const { carrito, eliminarItem, incrementarCantidad, decrementarCantidad, vaciarCarrito } = useCart();
   const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
   const grupos = agruparPorProducto(carrito);
+
+  const [procesandoPago, setProcesandoPago] = useState(false);
+  const [errorPago, setErrorPago] = useState('');
+
+  const handleFinalizarCompra = async () => {
+    setProcesandoPago(true);
+    setErrorPago('');
+
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // Solo mandamos id/talla/cantidad — el precio lo calcula el servidor
+        // a partir de la base, nunca confiamos en lo que ya está en el Context.
+        body: JSON.stringify({
+          items: carrito.map(item => ({ id: item.id, talla: item.talla, cantidad: item.cantidad })),
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        setErrorPago(data.error || 'No se pudo iniciar el pago.');
+        setProcesandoPago(false);
+        return;
+      }
+
+      window.location.href = data.init_point;
+    } catch {
+      setErrorPago('No se pudo conectar con Mercado Pago. Intentá de nuevo.');
+      setProcesandoPago(false);
+    }
+  };
 
   return (
     <section className="cart-page" aria-label="Carrito de compras">
@@ -101,6 +135,16 @@ function CartPage() {
             <p className="carrito-total">TOTAL: ${total.toLocaleString('es-AR')}</p>
             <button className="btn-vaciar" onClick={vaciarCarrito}>VACIAR CARRITO</button>
           </div>
+
+          {errorPago && <p className="error cart-page-error-pago" role="alert">{errorPago}</p>}
+
+          <button
+            className="btn-primary cart-page-checkout"
+            onClick={handleFinalizarCompra}
+            disabled={procesandoPago}
+          >
+            {procesandoPago ? 'REDIRIGIENDO...' : 'FINALIZAR COMPRA'}
+          </button>
         </>
       )}
     </section>

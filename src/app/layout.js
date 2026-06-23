@@ -1,9 +1,7 @@
 import './globals.css';
 import './logo-responsive.css';
 import { CartProvider } from './context/CartContext';
-import Navbar from './components/Navbar';
-import Contacto from './components/Contacto';
-import Footer from './components/Footer';
+import SiteChrome from './components/SiteChrome';
 
 export const metadata = {
   title: 'For Me Studios',
@@ -18,10 +16,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <CartProvider>
-          <Navbar />
-          {children}
-          <Contacto />
-          <Footer />
+          <SiteChrome>{children}</SiteChrome>
         </CartProvider>
       </body>
     </html>

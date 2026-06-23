@@ -40,20 +40,27 @@ function ProductoDetalle({ producto }) {
           <p className="producto-detalle-categoria">{producto.categoria === 'him' ? 'FOR HIM' : 'FOR HER'}</p>
           <h1 className="producto-detalle-nombre">{producto.nombre}</h1>
           <p className="producto-detalle-precio">${producto.precio.toLocaleString('es-AR')}</p>
+          {producto.descripcion && (
+            <p className="producto-detalle-descripcion">{producto.descripcion}</p>
+          )}
 
           <div className={`producto-detalle-tallas ${errorTalla ? 'talla-error' : ''}`}>
             <p className="tallas-label">TALLE</p>
             <div className="producto-tallas">
-              {producto.tallas.map(t => (
-                <button
-                  key={t}
-                  type="button"
-                  className={`talla talla-seleccionable ${tallaSeleccionada === t ? 'seleccionada' : ''}`}
-                  onClick={() => handleSeleccionarTalla(t)}
-                >
-                  {t}
-                </button>
-              ))}
+              {producto.tallas.map(t => {
+                const sinStock = (producto.stockPorTalla?.[t] ?? 1) <= 0;
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    className={`talla talla-seleccionable ${tallaSeleccionada === t ? 'seleccionada' : ''} ${sinStock ? 'sin-stock' : ''}`}
+                    onClick={() => handleSeleccionarTalla(t)}
+                    disabled={sinStock}
+                  >
+                    {t}
+                  </button>
+                );
+              })}
             </div>
             {errorTalla && (
               <p className="talla-error-msg" role="alert">Elegí un talle antes de agregar al carrito.</p>

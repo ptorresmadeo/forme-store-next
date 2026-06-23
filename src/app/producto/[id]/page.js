@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
-import { getProductoPorId } from '../../data/productos';
+import { createClient } from '@/lib/supabase/serverComponent';
+import { mapProducto } from '@/lib/productos';
 import ProductoDetalle from '../../components/ProductoDetalle';
 
 // Ruta singular ("/producto/[id]") en vez de "/productos/[id]": Next.js no permite
@@ -8,11 +9,13 @@ import ProductoDetalle from '../../components/ProductoDetalle';
 // viviendo en /productos/[categoria]; el detalle de un producto puntual vive acá.
 export default async function ProductoPage({ params }) {
   const { id } = await params;
-  const producto = getProductoPorId(id);
+  const supabase = await createClient();
 
-  if (!producto) {
+  const { data, error } = await supabase.from('productos').select('*').eq('id', id).single();
+
+  if (error || !data) {
     notFound();
   }
 
-  return <ProductoDetalle producto={producto} />;
+  return <ProductoDetalle producto={mapProducto(data)} />;
 }

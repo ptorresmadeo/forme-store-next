@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { todosLosProductos } from '../data/productos';
 
 function ProductCard({ p }) {
   const [hovered, setHovered] = useState(false);
@@ -46,9 +45,30 @@ function ProductCard({ p }) {
 
 function Catalogo({ categoria, cambiarCategoria }) {
   const router = useRouter();
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const cargarProductos = () => {
+    setLoading(true);
+    setError(false);
+    fetch('/api/productos')
+      .then(res => {
+        if (!res.ok) throw new Error('Error al cargar productos');
+        return res.json();
+      })
+      .then(setProductos)
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    cargarProductos();
+  }, []);
+
   const productosFiltrados = categoria === 'todos'
-    ? todosLosProductos
-    : todosLosProductos.filter(p => p.categoria === categoria);
+    ? productos
+    : productos.filter(p => p.categoria === categoria);
 
   return (
     <div>
@@ -79,11 +99,23 @@ function Catalogo({ categoria, cambiarCategoria }) {
         <div className="section-header">
           <h2>LATEST DROP</h2>
         </div>
-        <div className="productos-grid">
-          {productosFiltrados.map(p => (
-            <ProductCard key={p.id} p={p} />
-          ))}
-        </div>
+
+        {loading && <p className="catalogo-estado">Cargando productos...</p>}
+
+        {error && (
+          <div className="catalogo-estado catalogo-error">
+            <p>No pudimos cargar el catálogo.</p>
+            <button className="btn-ghost" onClick={cargarProductos}>REINTENTAR</button>
+          </div>
+        )}
+
+        {!loading && !error && (
+          <div className="productos-grid">
+            {productosFiltrados.map(p => (
+              <ProductCard key={p.id} p={p} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

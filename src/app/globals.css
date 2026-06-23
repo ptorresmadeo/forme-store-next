@@ -1179,3 +1179,224 @@ footer {
   border-color: #c0392b;
   color: #c0392b;
 }
+
+/* ===== ESTADOS DEL CATÁLOGO (loading / error) ===== */
+.catalogo-estado {
+  text-align: center;
+  color: var(--gris);
+  font-size: 13px;
+  padding: 60px 0;
+}
+
+.catalogo-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ===== DESCRIPCIÓN Y TALLES SIN STOCK (detalle de producto) ===== */
+.producto-detalle-descripcion {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--gris);
+  margin-bottom: 28px;
+  max-width: 420px;
+}
+
+.talla-seleccionable.sin-stock {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.talla-seleccionable.sin-stock:hover {
+  border-color: var(--borde);
+  color: var(--gris);
+}
+
+/* ===== PANEL ADMIN ===== */
+.admin-login {
+  max-width: 360px;
+  margin: 100px auto;
+  padding: 0 20px;
+}
+
+.admin-login h1 {
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: var(--azul);
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.admin-shell {
+  min-height: 100vh;
+  background: var(--gris-claro);
+}
+
+.admin-header {
+  background: var(--azul);
+  padding: 18px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-brand {
+  color: var(--blanco);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-decoration: none;
+}
+
+.admin-logout {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: var(--blanco);
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 6px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.admin-logout:hover {
+  border-color: var(--blanco);
+}
+
+.admin-main {
+  padding: 40px;
+}
+
+.admin-panel {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 40px;
+  align-items: start;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-form-section,
+.admin-lista-section {
+  background: var(--blanco);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  padding: 28px;
+}
+
+.admin-form-section h2,
+.admin-lista-section h2 {
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--azul);
+  margin-bottom: 24px;
+}
+
+.admin-form .form-group textarea {
+  height: 80px;
+}
+
+.admin-stock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 10px;
+}
+
+.admin-stock-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-stock-input span {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--gris);
+}
+
+.admin-stock-input input {
+  width: 100%;
+  border: 1px solid var(--borde);
+  border-radius: 3px;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.admin-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.admin-mensaje-ok {
+  color: #1a7a3c;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.admin-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.admin-tabla th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--gris);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--borde);
+}
+
+.admin-tabla td {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--borde);
+}
+
+.admin-tabla-acciones {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.admin-tabla-acciones button {
+  background: transparent;
+  border: 1px solid var(--borde);
+  color: var(--azul);
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.admin-tabla-acciones button:hover {
+  border-color: var(--azul);
+}
+
+.admin-btn-eliminar {
+  color: #c0392b !important;
+}
+
+.admin-btn-eliminar:hover {
+  border-color: #c0392b !important;
+}
+
+@media (max-width: 900px) {
+  .admin-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-main {
+    padding: 24px 16px;
+  }
+
+  .admin-header {
+    padding: 16px 20px;
+  }
+}

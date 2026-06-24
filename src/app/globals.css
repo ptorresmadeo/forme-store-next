@@ -124,6 +124,16 @@ nav ul li button:hover {
   z-index: 0;
 }
 
+/* iOS Safari dibuja un botón de play nativo y centrado sobre cualquier video
+   sin "controls" mientras no arrancó — esto lo oculta para que, si el
+   autoplay queda bloqueado por el sistema (Modo de Bajos Datos, "Reducir
+   movimiento", etc.), se vea el poster de forma intencional en vez de un
+   botón roto. El tap sigue funcionando vía onClick en el propio <video>. */
+.hero-video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 .hero-overlay {
   position: absolute;
   inset: 0;

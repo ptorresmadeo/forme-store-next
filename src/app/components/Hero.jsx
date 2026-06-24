@@ -45,6 +45,15 @@ function Hero() {
     e.currentTarget.play()?.catch(() => {});
   };
 
+  // Respaldo real: si el sistema operativo bloquea el autoplay (Modo de Bajos
+  // Datos / Ahorro de Datos / "Reducir movimiento" en iOS/Android pueden
+  // hacerlo a nivel sistema, sin que ningún atributo HTML lo pueda evitar),
+  // un toque genuino del usuario sí está siempre permitido por las políticas
+  // de autoplay — esto hace que tocar el video efectivamente lo arranque.
+  const handleTap = () => {
+    videoRef.current?.play()?.catch(() => {});
+  };
+
   return (
     <section className="hero" aria-label="Sección principal">
       <video
@@ -56,7 +65,9 @@ function Hero() {
         loop
         playsInline
         preload="auto"
+        poster="/hero-poster.jpg"
         onPause={handlePause}
+        onClick={handleTap}
       >
         {esMobile !== null && (
           <source src={esMobile ? '/hero-mobile.mp4' : '/hero.mp4'} type="video/mp4" />

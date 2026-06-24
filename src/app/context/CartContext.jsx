@@ -70,6 +70,7 @@ export function CartProvider({ children }) {
     <CartContext.Provider value={{
       carrito,
       totalItems,
+      hidratado,
       agregarAlCarrito,
       eliminarItem,
       incrementarCantidad,

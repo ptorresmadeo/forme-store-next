@@ -108,9 +108,9 @@ export async function POST(request) {
         items: itemsMercadoPago,
         external_reference: orden.id,
         back_urls: {
-          success: `${siteUrl}/cart?pago=exito`,
-          failure: `${siteUrl}/cart?pago=fallo`,
-          pending: `${siteUrl}/cart?pago=pendiente`,
+          success: `${siteUrl}/success`,
+          failure: `${siteUrl}/failure`,
+          pending: `${siteUrl}/pending`,
         },
         ...(esUrlPublicaHttps && { auto_return: 'approved' }),
         notification_url: `${siteUrl}/api/webhook`,

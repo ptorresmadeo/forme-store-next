@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -43,11 +43,20 @@ function ProductCard({ p }) {
   );
 }
 
+const RETRASO_FILTRO_MS = 500;
+
+function filtrarPorCategoria(productos, categoria) {
+  return categoria === 'todos' ? productos : productos.filter(p => p.categoria === categoria);
+}
+
 function Catalogo({ categoria, cambiarCategoria }) {
   const router = useRouter();
   const [productos, setProductos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [productosFiltrados, setProductosFiltrados] = useState([]);
+  const [loading, setLoading] = useState(true); // carga inicial desde la API
   const [error, setError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // transición visual al cambiar de categoría
+  const timeoutRef = useRef(null);
 
   const cargarProductos = () => {
     setLoading(true);
@@ -57,39 +66,57 @@ function Catalogo({ categoria, cambiarCategoria }) {
         if (!res.ok) throw new Error('Error al cargar productos');
         return res.json();
       })
-      .then(setProductos)
+      .then(data => {
+        setProductos(data);
+        setProductosFiltrados(filtrarPorCategoria(data, categoria));
+      })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
     cargarProductos();
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const productosFiltrados = categoria === 'todos'
-    ? productos
-    : productos.filter(p => p.categoria === categoria);
+  // 1) El loader se activa de inmediato y queda pintado en pantalla durante
+  // RETRASO_FILTRO_MS; el filtrado real (setProductosFiltrados) recién pasa
+  // DESPUÉS de ese retraso, para que nunca se pisen en el mismo render.
+  const seleccionarCategoria = (nuevaCategoria, ruta) => {
+    cambiarCategoria(nuevaCategoria);
+    router.replace(ruta, { scroll: false });
+
+    setIsLoading(true);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setProductosFiltrados(filtrarPorCategoria(productos, nuevaCategoria));
+      setIsLoading(false);
+    }, RETRASO_FILTRO_MS);
+  };
 
   return (
     <div>
       <section className="categorias" id="categorias" aria-label="Categorías">
         <button
           className={`cat-btn ${categoria === 'him' ? 'activo' : ''}`}
-          onClick={() => { cambiarCategoria('him'); router.replace('/productos/him', { scroll: false }); }}
+          onClick={() => seleccionarCategoria('him', '/productos/him')}
           style={categoria === 'him' ? { fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '4px', fontSize: '16px' } : {}}
         >
           <span className="cat-label">FOR HIM</span>
         </button>
         <button
           className={`cat-btn ${categoria === 'her' ? 'activo' : ''}`}
-          onClick={() => { cambiarCategoria('her'); router.replace('/productos/her', { scroll: false }); }}
+          onClick={() => seleccionarCategoria('her', '/productos/her')}
           style={categoria === 'her' ? { fontFamily: "'Cormorant Garamond', serif", letterSpacing: '4px', fontSize: '16px' } : {}}
         >
           <span className="cat-label">FOR HER</span>
         </button>
         <button
           className={`cat-btn ${categoria === 'todos' ? 'activo' : ''}`}
-          onClick={() => { cambiarCategoria('todos'); router.replace('/productos', { scroll: false }); }}
+          onClick={() => seleccionarCategoria('todos', '/productos')}
         >
           <span className="cat-label">VER TODO</span>
         </button>
@@ -100,7 +127,7 @@ function Catalogo({ categoria, cambiarCategoria }) {
           <h2>LATEST DROP</h2>
         </div>
 
-        {loading && <p className="catalogo-estado">Cargando productos...</p>}
+        {(loading || isLoading) && <p className="catalogo-estado">Cargando productos...</p>}
 
         {error && (
           <div className="catalogo-estado catalogo-error">
@@ -109,7 +136,7 @@ function Catalogo({ categoria, cambiarCategoria }) {
           </div>
         )}
 
-        {!loading && !error && (
+        {!loading && !error && !isLoading && (
           <div className="productos-grid">
             {productosFiltrados.map(p => (
               <ProductCard key={p.id} p={p} />

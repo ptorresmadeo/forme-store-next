@@ -46,6 +46,16 @@ body {
   to   { transform: scale(1.15) rotate(5deg); }
 }
 
+/* Misma animación que ".loader", pero contenida dentro de su contenedor
+   padre en vez de un overlay fijo a pantalla completa (ej. dentro del
+   catálogo, mientras se filtra por categoría). */
+.loader-contenido {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+}
+
 .loader.oculto {
   opacity: 0;
   pointer-events: none;
@@ -257,6 +267,13 @@ h1 span {
   display: flex;
   gap: 0;
   border-bottom: 1px solid var(--borde);
+}
+
+/* La línea clara de .categorias queda sobre el fondo negro de ".productos.him"
+   inmediatamente debajo — se funde con ese fondo en vez de notarse como una
+   raya blanca entre la pestaña azul activa y la sección negra. */
+.categorias.him {
+  border-bottom-color: #1a1a1a;
 }
 
 .cat-btn {
@@ -1253,6 +1270,15 @@ footer {
 }
 
 /* ===== ESTADOS DEL CATÁLOGO (loading / error) ===== */
+/* Solo centra mientras se muestra el loader (clase aplicada condicionalmente
+   desde Catalogo.jsx) — el grid de productos, que es el otro hijo posible de
+   este contenedor, nunca convive con esta clase, así que no se ve afectado. */
+.productos-contenido.centrado {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .catalogo-estado {
   text-align: center;
   color: var(--gris);

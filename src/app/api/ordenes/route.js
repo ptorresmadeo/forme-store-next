@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { validarItemsOrden, calcularTotal, ESTADOS_ORDEN } from '@/lib/ordenes';
+import { validarItemsOrden, crearOrdenConItems, ESTADOS_ORDEN } from '@/lib/ordenes';
 import { mapearErrorSupabase } from '@/lib/apiErrors';
 
 export async function GET() {
@@ -47,38 +47,12 @@ export async function POST(request) {
     return NextResponse.json({ errores: { estado: 'Estado inválido.' } }, { status: 400 });
   }
 
-  const total = calcularTotal(body.items);
+  const { orden, error } = await crearOrdenConItems(supabase, { estado, items: body.items });
 
-  const { data: orden, error: errorOrden } = await supabase
-    .from('ordenes')
-    .insert({ estado, total })
-    .select()
-    .single();
-
-  if (errorOrden) {
-    const { status, body: errBody } = mapearErrorSupabase(errorOrden);
+  if (error) {
+    const { status, body: errBody } = mapearErrorSupabase(error);
     return NextResponse.json(errBody, { status });
   }
 
-  const { data: items, error: errorItemsInsert } = await supabase
-    .from('orden_items')
-    .insert(
-      body.items.map(item => ({
-        orden_id: orden.id,
-        producto_id: item.producto_id,
-        talla: item.talla,
-        cantidad: item.cantidad,
-        precio_unitario: item.precio_unitario,
-      }))
-    )
-    .select();
-
-  if (errorItemsInsert) {
-    // Rollback manual: no dejar una orden huérfana sin items.
-    await supabase.from('ordenes').delete().eq('id', orden.id);
-    const { status, body: errBody } = mapearErrorSupabase(errorItemsInsert);
-    return NextResponse.json(errBody, { status });
-  }
-
-  return NextResponse.json({ ...orden, orden_items: items }, { status: 201 });
+  return NextResponse.json(orden, { status: 201 });
 }

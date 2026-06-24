@@ -29,3 +29,33 @@ export function validarItemsOrden(items) {
 export function calcularTotal(items) {
   return items.reduce((acc, item) => acc + item.cantidad * item.precio_unitario, 0);
 }
+
+// Compartido entre POST /api/ordenes (admin) y POST /api/checkout (público):
+// inserta la orden y sus items, con rollback manual si fallan los items
+// (ver nota en cada caller sobre por qué no es una transacción real).
+// "items" ya viene normalizado como [{producto_id, talla, cantidad, precio_unitario}].
+export async function crearOrdenConItems(supabase, { estado = 'pendiente', items }) {
+  const total = calcularTotal(items);
+
+  const { data: orden, error: errorOrden } = await supabase
+    .from('ordenes')
+    .insert({ estado, total })
+    .select()
+    .single();
+
+  if (errorOrden) {
+    return { error: errorOrden };
+  }
+
+  const { data: ordenItems, error: errorItems } = await supabase
+    .from('orden_items')
+    .insert(items.map(item => ({ ...item, orden_id: orden.id })))
+    .select();
+
+  if (errorItems) {
+    await supabase.from('ordenes').delete().eq('id', orden.id);
+    return { error: errorItems };
+  }
+
+  return { orden: { ...orden, orden_items: ordenItems } };
+}

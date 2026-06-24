@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { Preference } from 'mercadopago';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { validarItemsCheckout } from '@/lib/checkout';
+import { crearOrdenConItems } from '@/lib/ordenes';
 import { getMercadoPagoClient } from '@/lib/mercadopago';
 
 export async function POST(request) {
@@ -15,7 +16,16 @@ export async function POST(request) {
     return NextResponse.json({ error: errorItems }, { status: 400 });
   }
 
-  const supabase = await createClient();
+  // Checkout es un flujo público (sin sesión de usuario): usamos el cliente
+  // admin para poder leer productos y crear la orden sin depender de RLS.
+  let supabase;
+  try {
+    supabase = createAdminClient();
+  } catch (e) {
+    console.error(e.message);
+    return NextResponse.json({ error: 'El checkout no está configurado correctamente.' }, { status: 500 });
+  }
+
   const idsUnicos = [...new Set(body.items.map(item => item.id))];
 
   const { data: productosDb, error } = await supabase
@@ -30,9 +40,10 @@ export async function POST(request) {
   const productosPorId = new Map(productosDb.map(p => [p.id, p]));
 
   // Acá está la validación estricta que evita manipular precios desde el cliente:
-  // el unit_price que se manda a Mercado Pago viene SIEMPRE de "producto.precio"
-  // (Supabase), nunca de algo que haya mandado el frontend.
+  // el unit_price/precio_unitario viene SIEMPRE de "producto.precio" (Supabase),
+  // nunca de algo que haya mandado el frontend.
   const itemsMercadoPago = [];
+  const itemsOrden = [];
   for (const item of body.items) {
     const producto = productosPorId.get(item.id);
     if (!producto) {
@@ -55,6 +66,25 @@ export async function POST(request) {
       unit_price: Number(producto.precio),
       currency_id: 'ARS',
     });
+
+    itemsOrden.push({
+      producto_id: producto.id,
+      talla: item.talla,
+      cantidad: item.cantidad,
+      precio_unitario: Number(producto.precio),
+    });
+  }
+
+  // La orden queda "pendiente" desde ya — el webhook la marca "pagado" (y
+  // descuenta stock) recién cuando Mercado Pago confirma el pago aprobado.
+  const { orden, error: errorOrden } = await crearOrdenConItems(supabase, {
+    estado: 'pendiente',
+    items: itemsOrden,
+  });
+
+  if (errorOrden) {
+    console.error('Error creando la orden previa al pago:', errorOrden);
+    return NextResponse.json({ error: 'No se pudo iniciar el pago.' }, { status: 500 });
   }
 
   let client;
@@ -76,6 +106,7 @@ export async function POST(request) {
     const resultado = await preference.create({
       body: {
         items: itemsMercadoPago,
+        external_reference: orden.id,
         back_urls: {
           success: `${siteUrl}/cart?pago=exito`,
           failure: `${siteUrl}/cart?pago=fallo`,
@@ -88,6 +119,8 @@ export async function POST(request) {
 
     return NextResponse.json({ init_point: resultado.init_point });
   } catch (e) {
+    // La orden queda "pendiente" sin preferencia asociada — no decrementa stock
+    // ni se marca pagada nunca, así que dejarla así no genera inconsistencias.
     console.error('Error creando preferencia de Mercado Pago:', e);
     return NextResponse.json({ error: 'No se pudo iniciar el pago. Intentá de nuevo.' }, { status: 500 });
   }

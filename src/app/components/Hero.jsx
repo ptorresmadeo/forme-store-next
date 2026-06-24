@@ -1,10 +1,28 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useScrolled } from '../hooks/useScrolled';
+
+const BREAKPOINT_MOBILE = '(max-width: 768px)';
 
 function Hero() {
   const scrolled = useScrolled(80);
   const videoRef = useRef(null);
+  // null = todavía no se determinó (ni en SSR ni en el primer render del
+  // cliente, así no hay mismatch de hidratación). Mientras sea null no se
+  // renderiza ningún <source> — el navegador puede empezar a pedir el
+  // recurso apenas se inserta el elemento en el DOM, antes de que llegue a
+  // correr cualquier efecto, así que la única forma de garantizar que un
+  // celular nunca pida el archivo pesado de escritorio (ni un instante) es
+  // no darle ninguna URL hasta saber con certeza qué versión corresponde.
+  const [esMobile, setEsMobile] = useState(null);
+
+  useLayoutEffect(() => {
+    const mq = window.matchMedia(BREAKPOINT_MOBILE);
+    setEsMobile(mq.matches);
+    const handler = (e) => setEsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -19,11 +37,18 @@ function Hero() {
       // Si el navegador lo bloquea igual, el video queda pausado en su primer
       // frame sin romper nada más; no hace falta UI de fallback acá.
     });
-  }, []);
+  }, [esMobile]);
+
+  // Sin "controles" visibles, cualquier pausa (ej. un corte momentáneo de red)
+  // es "no intencional" para un video de fondo decorativo — se reintenta solo.
+  const handlePause = (e) => {
+    e.currentTarget.play()?.catch(() => {});
+  };
 
   return (
     <section className="hero" aria-label="Sección principal">
       <video
+        key={esMobile === null ? 'pendiente' : esMobile ? 'mobile' : 'desktop'}
         ref={videoRef}
         className="hero-video"
         autoPlay
@@ -31,8 +56,11 @@ function Hero() {
         loop
         playsInline
         preload="auto"
+        onPause={handlePause}
       >
-        <source src="/hero.mp4" type="video/mp4" />
+        {esMobile !== null && (
+          <source src={esMobile ? '/hero-mobile.mp4' : '/hero.mp4'} type="video/mp4" />
+        )}
       </video>
       <div className="hero-overlay"></div>
 

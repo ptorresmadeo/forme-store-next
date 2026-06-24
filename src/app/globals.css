@@ -129,6 +129,10 @@ nav ul li button:hover {
   inset: 0;
   background: rgba(0, 0, 0, 0.45);
   z-index: 1;
+  /* Sin esto, este velo absorbe cualquier tap antes de que llegue al <video>
+     de abajo — si el navegador bloquea el autoplay y muestra su propio botón
+     de play nativo, quedaba inalcanzable. */
+  pointer-events: none;
 }
 
 @keyframes float {

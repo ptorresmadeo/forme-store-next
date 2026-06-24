@@ -1,12 +1,37 @@
 'use client';
+import { useEffect, useRef } from 'react';
 import { useScrolled } from '../hooks/useScrolled';
 
 function Hero() {
   const scrolled = useScrolled(80);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    // React no siempre sincroniza la PROPIEDAD "muted" del DOM con el atributo
+    // HTML durante la hidratación SSR — algunos navegadores mobile chequean
+    // la propiedad real (no el atributo) antes de permitir el autoplay.
+    // Forzarla explícitamente y reintentar play() es lo que lo hace confiable
+    // en iOS/Android en vez de depender solo de los atributos.
+    video.muted = true;
+    video.play()?.catch(() => {
+      // Si el navegador lo bloquea igual, el video queda pausado en su primer
+      // frame sin romper nada más; no hace falta UI de fallback acá.
+    });
+  }, []);
 
   return (
     <section className="hero" aria-label="Sección principal">
-      <video className="hero-video" autoPlay muted loop playsInline>
+      <video
+        ref={videoRef}
+        className="hero-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+      >
         <source src="/hero.mp4" type="video/mp4" />
       </video>
       <div className="hero-overlay"></div>

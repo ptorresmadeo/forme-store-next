@@ -1100,16 +1100,20 @@ footer {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  transition: top 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-              left 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  /* top/left quedan SIEMPRE en 50%/50% — nunca se animan. Todo el recorrido
+     (centrado -> esquina) pasa únicamente por "transform", para que el
+     navegador interpole una sola trayectoria coherente en vez de combinar
+     dos porcentajes con bases distintas (ancho del Hero vs. ancho propio del
+     logo), que es lo que causaba el "salto y rebote" en mobile. */
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .hero-logo-wrap.scrolled {
-  top: 18px;
-  left: 30px;
-  transform: translate(0, 0);
-
+  /* Desplaza desde el centro (-50%,-50% relativo al propio logo) hasta que
+     la esquina superior izquierda quede exactamente en (30px, 18px) desde
+     el borde del Hero — el mismo destino que antes, pero expresado como un
+     único transform en vez de mezclarlo con top/left. */
+  transform: translate(calc(-50vw + 30px), calc(-50vh + 18px));
 }
 
 .hero-logo-img {
@@ -1166,13 +1170,20 @@ footer {
   z-index: 200;
   display: flex;
   align-items: center;
-  transition: left 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  /* "left" queda fijo en 30px siempre — igual que en .hero-logo-wrap, todo el
+     desplazamiento pasa por "transform" para que sea una única trayectoria
+     coherente en vez de combinar left (% del viewport) con transform (% del
+     propio elemento). Resultado idéntico al anterior: ver el cálculo de abajo. */
+  transform: translateX(0);
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navbar-logo-wrap.scrolled {
-  left: 50%;
-  transform: translateX(-50%);
+  /* Antes: left:50% + translateX(-50%) → x final = 50vw - mitad del ancho propio.
+     Ahora, con left fijo en 30px: x final = 30px + translateX(...), así que
+     translateX tiene que valer (50vw - 30px - 50%) para llegar exactamente
+     al mismo punto. */
+  transform: translateX(calc(50vw - 30px - 50%));
 }
 
 .navbar-logo-img {

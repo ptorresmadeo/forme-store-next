@@ -56,6 +56,8 @@ function ProductoDetalle({ producto }) {
                     className={`talla talla-seleccionable ${tallaSeleccionada === t ? 'seleccionada' : ''} ${sinStock ? 'sin-stock' : ''}`}
                     onClick={() => handleSeleccionarTalla(t)}
                     disabled={sinStock}
+                    aria-pressed={tallaSeleccionada === t}
+                    aria-label={`Talle ${t}${sinStock ? ' (sin stock)' : ''}`}
                   >
                     {t}
                   </button>

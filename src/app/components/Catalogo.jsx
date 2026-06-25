@@ -123,6 +123,7 @@ function Catalogo({ categoria, cambiarCategoria }) {
           className={`cat-btn ${categoria === 'him' ? 'activo' : ''}`}
           onClick={() => seleccionarCategoria('him', '/productos/him')}
           style={categoria === 'him' ? { fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '4px', fontSize: '16px' } : {}}
+          aria-pressed={categoria === 'him'}
         >
           <span className="cat-label">FOR HIM</span>
         </button>
@@ -130,12 +131,14 @@ function Catalogo({ categoria, cambiarCategoria }) {
           className={`cat-btn ${categoria === 'her' ? 'activo' : ''}`}
           onClick={() => seleccionarCategoria('her', '/productos/her')}
           style={categoria === 'her' ? { fontFamily: "'Cormorant Garamond', serif", letterSpacing: '4px', fontSize: '16px' } : {}}
+          aria-pressed={categoria === 'her'}
         >
           <span className="cat-label">FOR HER</span>
         </button>
         <button
           className={`cat-btn ${categoria === 'todos' ? 'activo' : ''}`}
           onClick={() => seleccionarCategoria('todos', '/productos')}
+          aria-pressed={categoria === 'todos'}
         >
           <span className="cat-label">VER TODO</span>
         </button>

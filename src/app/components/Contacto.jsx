@@ -5,6 +5,8 @@ function Contacto() {
   const [form, setForm] = useState({ nombre: '', email: '', mensaje: '' });
   const [errores, setErrores] = useState({});
   const [enviado, setEnviado] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [errorEnvio, setErrorEnvio] = useState('');
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,15 +28,37 @@ function Contacto() {
     return nuevosErrores;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const erroresEncontrados = validar();
     if (Object.keys(erroresEncontrados).length > 0) {
       setErrores(erroresEncontrados);
-    } else {
-      setErrores({});
+      return;
+    }
+
+    setErrores({});
+    setErrorEnvio('');
+    setEnviando(true);
+
+    try {
+      const res = await fetch('/api/contacto', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setErrorEnvio(data.error || 'No pudimos enviar tu mensaje. Intentá de nuevo.');
+        return;
+      }
+
       setEnviado(true);
       setForm({ nombre: '', email: '', mensaje: '' });
+    } catch {
+      setErrorEnvio('No pudimos conectar con el servidor. Intentá de nuevo.');
+    } finally {
+      setEnviando(false);
     }
   };
 
@@ -81,7 +105,10 @@ function Contacto() {
               />
               {errores.mensaje && <span className="error">{errores.mensaje}</span>}
             </div>
-            <button type="submit" className="btn-primary">ENVIAR</button>
+            {errorEnvio && <p className="error" role="alert">{errorEnvio}</p>}
+            <button type="submit" className="btn-primary" disabled={enviando}>
+              {enviando ? 'ENVIANDO...' : 'ENVIAR'}
+            </button>
           </form>
         )}
       </div>

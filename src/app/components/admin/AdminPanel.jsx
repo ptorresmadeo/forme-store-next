@@ -240,8 +240,8 @@ function AdminPanel() {
             />
           </div>
 
-          <div className="form-group">
-            <label>Stock por talle</label>
+          <fieldset className="form-group">
+            <legend>Stock por talle</legend>
             <div className="admin-stock-grid">
               {tallasFormulario.map(talla => (
                 <div key={talla} className="admin-stock-input">
@@ -252,12 +252,13 @@ function AdminPanel() {
                     step="1"
                     value={form.stock_por_talle[talla] ?? ''}
                     onChange={e => handleStockChange(talla, e.target.value)}
+                    aria-label={`Stock talle ${talla}`}
                   />
                 </div>
               ))}
             </div>
             {formErrors.stock_por_talle && <span className="error">{formErrors.stock_por_talle}</span>}
-          </div>
+          </fieldset>
 
           {formErrors._general && <p className="error">{formErrors._general}</p>}
           {mensaje && <p className="admin-mensaje-ok">{mensaje}</p>}
@@ -300,8 +301,14 @@ function AdminPanel() {
                     <td>${p.precio.toLocaleString('es-AR')}</td>
                     <td>{stockTotal}</td>
                     <td className="admin-tabla-acciones">
-                      <button onClick={() => handleEditar(p)}>EDITAR</button>
-                      <button onClick={() => handleEliminar(p.id)} className="admin-btn-eliminar">ELIMINAR</button>
+                      <button onClick={() => handleEditar(p)} aria-label={`Editar ${p.nombre}`}>EDITAR</button>
+                      <button
+                        onClick={() => handleEliminar(p.id)}
+                        className="admin-btn-eliminar"
+                        aria-label={`Eliminar ${p.nombre}`}
+                      >
+                        ELIMINAR
+                      </button>
                     </td>
                   </tr>
                 );

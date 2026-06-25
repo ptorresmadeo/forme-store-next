@@ -80,7 +80,7 @@ function Contacto() {
                 onChange={handleChange}
                 placeholder="Tu nombre"
               />
-              {errores.nombre && <span className="error">{errores.nombre}</span>}
+              {errores.nombre && <span className="error" role="alert">{errores.nombre}</span>}
             </div>
             <div className="form-group">
               <label htmlFor="email">Email</label>
@@ -92,7 +92,7 @@ function Contacto() {
                 onChange={handleChange}
                 placeholder="tu@email.com"
               />
-              {errores.email && <span className="error">{errores.email}</span>}
+              {errores.email && <span className="error" role="alert">{errores.email}</span>}
             </div>
             <div className="form-group">
               <label htmlFor="mensaje">Mensaje</label>
@@ -103,7 +103,7 @@ function Contacto() {
                 onChange={handleChange}
                 placeholder="Tu mensaje..."
               />
-              {errores.mensaje && <span className="error">{errores.mensaje}</span>}
+              {errores.mensaje && <span className="error" role="alert">{errores.mensaje}</span>}
             </div>
             {errorEnvio && <p className="error" role="alert">{errorEnvio}</p>}
             <button type="submit" className="btn-primary" disabled={enviando}>

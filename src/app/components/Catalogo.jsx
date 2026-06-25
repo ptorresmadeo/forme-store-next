@@ -118,27 +118,35 @@ function Catalogo({ categoria, cambiarCategoria }) {
 
   return (
     <div>
-      <section className={`categorias ${categoria === 'him' ? 'him' : ''}`} id="categorias" aria-label="Categorías">
+      <section
+        className={`categorias ${categoria === 'him' ? 'him' : ''}`}
+        id="categorias"
+        role="tablist"
+        aria-label="Filtrar por categoría"
+      >
         <button
+          role="tab"
+          aria-selected={categoria === 'him'}
           className={`cat-btn ${categoria === 'him' ? 'activo' : ''}`}
           onClick={() => seleccionarCategoria('him', '/productos/him')}
           style={categoria === 'him' ? { fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '4px', fontSize: '16px' } : {}}
-          aria-pressed={categoria === 'him'}
         >
           <span className="cat-label">FOR HIM</span>
         </button>
         <button
+          role="tab"
+          aria-selected={categoria === 'her'}
           className={`cat-btn ${categoria === 'her' ? 'activo' : ''}`}
           onClick={() => seleccionarCategoria('her', '/productos/her')}
           style={categoria === 'her' ? { fontFamily: "'Cormorant Garamond', serif", letterSpacing: '4px', fontSize: '16px' } : {}}
-          aria-pressed={categoria === 'her'}
         >
           <span className="cat-label">FOR HER</span>
         </button>
         <button
+          role="tab"
+          aria-selected={categoria === 'todos'}
           className={`cat-btn ${categoria === 'todos' ? 'activo' : ''}`}
           onClick={() => seleccionarCategoria('todos', '/productos')}
-          aria-pressed={categoria === 'todos'}
         >
           <span className="cat-label">VER TODO</span>
         </button>

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Preference } from 'mercadopago';
+import { createClient as createClientSesion } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { validarItemsCheckout } from '@/lib/checkout';
 import { crearOrdenConItems } from '@/lib/ordenes';
@@ -16,8 +17,18 @@ export async function POST(request) {
     return NextResponse.json({ error: errorItems }, { status: 400 });
   }
 
-  // Checkout es un flujo público (sin sesión de usuario): usamos el cliente
-  // admin para poder leer productos y crear la orden sin depender de RLS.
+  // El checkout sigue siendo guest (sin login obligatorio), pero SI el
+  // comprador tiene una sesión activa, asociamos la orden a su email — para
+  // que después aparezca en /mis-ordenes. Esto se deriva de la sesión real
+  // (cookies validadas por Supabase), NUNCA de algo que mande el body: de lo
+  // contrario cualquiera podría "asignar" una compra al email de otra
+  // persona con solo escribirlo en el fetch.
+  const supabaseSesion = await createClientSesion();
+  const { data: { user: usuarioLogueado } } = await supabaseSesion.auth.getUser();
+  const emailComprador = usuarioLogueado?.email ?? null;
+
+  // El resto del checkout (leer productos, crear la orden) usa el cliente
+  // admin porque es un flujo público sin sesión de usuario obligatoria.
   let supabase;
   try {
     supabase = createAdminClient();
@@ -80,6 +91,7 @@ export async function POST(request) {
   const { orden, error: errorOrden } = await crearOrdenConItems(supabase, {
     estado: 'pendiente',
     items: itemsOrden,
+    email: emailComprador,
   });
 
   if (errorOrden) {
@@ -100,6 +112,9 @@ export async function POST(request) {
   // alcanzable (ej. localhost): "auto_return invalid. back_url.success must be
   // defined". Solo lo activamos cuando el sitio corre en una URL https pública.
   const esUrlPublicaHttps = siteUrl.startsWith('https://');
+  // Con sesión activa, el comprador vuelve directo a ver su compra impactada
+  // en /mis-ordenes; de invitado, a /success (no tiene "sus" órdenes que ver).
+  const urlExito = usuarioLogueado ? `${siteUrl}/mis-ordenes` : `${siteUrl}/success`;
   const preference = new Preference(client);
 
   try {
@@ -108,7 +123,7 @@ export async function POST(request) {
         items: itemsMercadoPago,
         external_reference: orden.id,
         back_urls: {
-          success: `${siteUrl}/success`,
+          success: urlExito,
           failure: `${siteUrl}/failure`,
           pending: `${siteUrl}/pending`,
         },

@@ -34,12 +34,15 @@ export function calcularTotal(items) {
 // inserta la orden y sus items, con rollback manual si fallan los items
 // (ver nota en cada caller sobre por qué no es una transacción real).
 // "items" ya viene normalizado como [{producto_id, talla, cantidad, precio_unitario}].
-export async function crearOrdenConItems(supabase, { estado = 'pendiente', items }) {
+// "email" es opcional (null en compras de invitado) y SIEMPRE tiene que venir
+// ya derivado de una sesión validada server-side, nunca de un body sin
+// verificar — quien llama a esta función es responsable de eso.
+export async function crearOrdenConItems(supabase, { estado = 'pendiente', items, email }) {
   const total = calcularTotal(items);
 
   const { data: orden, error: errorOrden } = await supabase
     .from('ordenes')
-    .insert({ estado, total })
+    .insert({ estado, total, ...(email && { email }) })
     .select()
     .single();
 

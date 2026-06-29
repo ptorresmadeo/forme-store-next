@@ -34,7 +34,6 @@ export default async function MisOrdenesPage() {
                   <p className="cart-page-item-nombre">
                     Orden del {new Date(orden.fecha).toLocaleDateString('es-AR')}
                   </p>
-                  <p className="cart-page-item-cantidad">Estado: {orden.estado}</p>
                 </div>
                 <span className="cart-page-item-precio">
                   ${Number(orden.total).toLocaleString('es-AR')}

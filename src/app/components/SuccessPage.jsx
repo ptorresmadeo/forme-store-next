@@ -21,8 +21,9 @@ function SuccessPage() {
   return (
     <section className="estado-pago" aria-label="Pago confirmado">
       <span className="estado-pago-icono exito" aria-hidden="true">✓</span>
-      <h1>¡PAGO CONFIRMADO!</h1>
-      <p>Tu pedido ya está siendo procesado. Te vamos a contactar para coordinar la entrega.</p>
+      <h1>¡Muchas gracias por tu compra!</h1>
+      <p>(Has comprado como invitado)</p>
+      <p>Tu pedido ya está siendo procesado. Comunícate al 1234-5678 para coordinar la entrega.</p>
       <Link href="/productos" className="btn-primary">VOLVER A LA TIENDA</Link>
     </section>
   );

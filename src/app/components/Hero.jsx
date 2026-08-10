@@ -76,7 +76,7 @@ function Hero() {
       <div className="hero-overlay"></div>
 
       <div className={`hero-logo-wrap ${scrolled ? 'scrolled' : ''}`}>
-        <img src="/logo.png" alt="" aria-hidden="true" className="hero-logo-img" />
+        <img src="/logo-estrella.png" alt="" aria-hidden="true" className="hero-logo-img" />
         <h1 className="hero-titulo">FOR <span>ME</span></h1>
       </div>
 
@@ -86,7 +86,7 @@ function Hero() {
         </div>
         <p className="hero-sub">LIMITADO · LOCAL · 2026</p>
         <div className="hero-btns">
-          <a href="#categorias" className="btn-primary">VER DROP</a>
+          <a href="#productos" className="btn-primary">VER DROP</a>
           <a href="#contacto" className="btn-ghost">CONTACTO</a>
         </div>
       </div>

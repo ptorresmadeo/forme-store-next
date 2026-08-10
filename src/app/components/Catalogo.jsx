@@ -58,6 +58,8 @@ function Catalogo({ categoria, cambiarCategoria }) {
   const [alturaReservada, setAlturaReservada] = useState(null);
   const timeoutRef = useRef(null);
   const contenidoRef = useRef(null);
+  // Ref para evitar closure stale en el event listener del drawer
+  const seleccionarCategoriaRef = useRef(null);
 
   const cargarProductos = () => {
     setLoading(true);
@@ -116,6 +118,20 @@ function Catalogo({ categoria, cambiarCategoria }) {
     }, RETRASO_FILTRO_MS);
   };
 
+  // Mantiene el ref actualizado en cada render para que el listener del drawer
+  // siempre llame a la versión fresca sin riesgo de closure stale.
+  seleccionarCategoriaRef.current = seleccionarCategoria;
+
+  useEffect(() => {
+    const handleFiltrar = (e) => {
+      const nueva = e.detail;
+      const ruta = nueva === 'todos' ? '/productos' : `/productos/${nueva}`;
+      seleccionarCategoriaRef.current(nueva, ruta);
+    };
+    window.addEventListener('filtrarCategoria', handleFiltrar);
+    return () => window.removeEventListener('filtrarCategoria', handleFiltrar);
+  }, []);
+
   return (
     <div>
       <section
@@ -129,7 +145,7 @@ function Catalogo({ categoria, cambiarCategoria }) {
           aria-selected={categoria === 'him'}
           className={`cat-btn ${categoria === 'him' ? 'activo' : ''}`}
           onClick={() => seleccionarCategoria('him', '/productos/him')}
-          style={categoria === 'him' ? { fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '4px', fontSize: '16px' } : {}}
+          style={categoria === 'him' ? { letterSpacing: '4px', fontSize: '16px' } : {}}
         >
           <span className="cat-label">FOR HIM</span>
         </button>
@@ -138,7 +154,7 @@ function Catalogo({ categoria, cambiarCategoria }) {
           aria-selected={categoria === 'her'}
           className={`cat-btn ${categoria === 'her' ? 'activo' : ''}`}
           onClick={() => seleccionarCategoria('her', '/productos/her')}
-          style={categoria === 'her' ? { fontFamily: "'Cormorant Garamond', serif", letterSpacing: '4px', fontSize: '16px' } : {}}
+          style={categoria === 'her' ? { letterSpacing: '4px', fontSize: '16px' } : {}}
         >
           <span className="cat-label">FOR HER</span>
         </button>

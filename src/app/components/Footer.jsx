@@ -2,7 +2,7 @@ function Footer() {
   return (
     <footer role="contentinfo">
       <div className="footer-brand">
-        <img src="/logo.png" alt="" className="footer-logo" aria-hidden="true" />
+        <img src="/logo-estrella.png" alt="" className="footer-logo" aria-hidden="true" />
         <span>FOR ME STUDIOS © 2026</span>
       </div>
       <div className="footer-links">

@@ -5,7 +5,7 @@
 function Loader({ pantallaCompleta = true }) {
   return (
     <div className={pantallaCompleta ? 'loader' : 'loader-contenido'}>
-      <img src="/logo.png" alt="For Me Studios" className="loader-logo" />
+      <img src="/logo-forme.png" alt="For Me Studios" className="loader-logo" />
     </div>
   );
 }

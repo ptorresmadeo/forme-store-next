@@ -7,12 +7,12 @@
   }
 
   .hero-logo-img {
-    width: 110px;
+    width: 300px;
     animation-duration: 2.4s;
   }
 
   .hero-logo-wrap.scrolled .hero-logo-img {
-    width: 30px;
+    width: 80px;
   }
 
   .hero-titulo {
@@ -29,12 +29,12 @@
   }
 
   .hero-logo-img {
-    width: 84px;
+    width: 240px;
     animation-duration: 2s;
   }
 
   .hero-logo-wrap.scrolled .hero-logo-img {
-    width: 26px;
+    width: 65px;
   }
 
   .hero-titulo {

@@ -92,7 +92,7 @@ function Navbar() {
       {/* Navbar sticky */}
       <header className="navbar" role="banner">
         <div className={`navbar-logo-wrap ${scrolled ? 'scrolled' : ''}`}>
-          <Link href="/" aria-label="Ir al inicio">
+          <Link href="/catalogo" aria-label="Ir al inicio">
             <img src="/logo-estrella.png" alt="For Me Studios" className="navbar-logo-img" />
           </Link>
         </div>

@@ -1,0 +1,352 @@
+/* ===== LOGIN / REGISTRO =====
+   Mismo sistema visual que la landing (coming-soon.module.css). Anula el
+   bold/italic global del body. */
+.pagina {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  background: #ffffff;
+  color: #0d0d0d;
+  font-family: Arial, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.pagina input,
+.pagina button {
+  font-family: Arial, sans-serif;
+}
+
+/* ----- panel izquierdo: imagen del hero con velo azul (solo desktop) ----- */
+.panelMarca {
+  position: relative;
+  overflow: hidden;
+  background: #1a3a6b url('/hero-poster.jpg') center / cover no-repeat;
+}
+
+.panelOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(26, 58, 107, 0.55) 0%, rgba(10, 10, 15, 0.85) 100%);
+}
+
+.panelForm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+@media (max-width: 860px) {
+  /* minmax(0, …): con "1fr" solo, la columna no baja de su contenido mínimo
+     y en pantallas de 320px desbordaba horizontalmente. */
+  .pagina {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .panelMarca {
+    display: none;
+  }
+}
+
+.contenedor {
+  width: 100%;
+  max-width: 30rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logoLink {
+  display: block;
+}
+
+.logo {
+  --logo-ancho: min(200px, 60vw);
+}
+
+.titulo {
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  letter-spacing: normal;
+  line-height: 1.2;
+  color: #0d0d0d;
+  margin-top: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+/* ----- card ----- */
+.card {
+  width: 100%;
+  max-width: 480px;
+  padding: 2rem 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-align: left;
+}
+
+.bajada {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #4b5563;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* ----- botón de Google + divisor ----- */
+.google {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111827;
+  font-weight: 700;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.google:hover:not(:disabled) {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.google:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.divisor {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin: 1.5rem 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.divisor::before,
+.divisor::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+/* ----- campos ----- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.inputWrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputWrap:focus-within {
+  border-color: #0a192f;
+  box-shadow: 0 0 0 3px rgba(10, 25, 47, 0.1);
+}
+
+.inputError,
+.inputError:focus-within {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem 1rem;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.875rem;
+  color: #0d0d0d;
+}
+
+.input::placeholder {
+  color: #6b7280;
+}
+
+.toggle {
+  margin-right: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #6b7280;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.toggle:hover {
+  background: #e5e7eb;
+  color: #0d0d0d;
+}
+
+.errorCampo {
+  font-size: 0.75rem;
+  color: #dc2626;
+}
+
+.ayuda {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.alerta {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+/* ----- botón principal ----- */
+.submit {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #0a192f;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.submit:hover:not(:disabled) {
+  background-color: #000000;
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.google:focus-visible,
+.submit:focus-visible,
+.toggle:focus-visible,
+.volver:focus-visible {
+  outline: 2px solid #0a192f;
+  outline-offset: 2px;
+}
+
+/* ----- pie ----- */
+.pie {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.pie a {
+  color: #0d0d0d;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pie a:hover {
+  text-decoration: underline;
+}
+
+.volver {
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  color: #6b7280;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.volver:hover {
+  color: #0d0d0d;
+}
+
+/* ----- confirmación de registro ----- */
+.confirmacion {
+  text-align: center;
+}
+
+.confirmacionIcono {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: #0a192f;
+  color: #ffffff;
+  font-size: 1.25rem;
+  margin-bottom: 0.875rem;
+}
+
+.confirmacionTitulo {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.375rem;
+}
+
+.confirmacionTexto {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #4b5563;
+  margin-bottom: 1.5rem;
+}
+
+/* ----- celulares ----- */
+@media (max-width: 640px) {
+  /* iOS hace zoom al enfocar inputs de menos de 16px. */
+  .input {
+    font-size: 16px;
+  }
+
+  .titulo {
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .panelForm {
+    padding: 1.5rem 0.875rem;
+  }
+
+  .card {
+    padding: 1.5rem 1.125rem;
+  }
+}

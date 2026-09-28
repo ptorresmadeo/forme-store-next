@@ -24,6 +24,14 @@ body {
   overflow-x: hidden;
 }
 
+/* Inputs y botones no heredan la fuente por defecto: Arial en todo el DOM. */
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+}
+
 /* ===== LOADER ===== */
 .loader {
   position: fixed;

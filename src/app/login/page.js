@@ -1,67 +1,26 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
+import AuthShell from '../components/auth/AuthShell';
+import LoginForm from '../components/auth/LoginForm';
 
-export default function LoginPage() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [cargando, setCargando] = useState(false);
+export const metadata = {
+  title: 'Iniciar sesión — For Me Studios',
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setCargando(true);
+// /auth/callback redirige acá con ?error=oauth si el login con Google falla.
+const ERRORES = {
+  oauth: 'No pudimos completar el inicio de sesión con Google. Probá de nuevo.',
+};
 
-    const supabase = createClient();
-    const { error: errorLogin } = await supabase.auth.signInWithPassword({ email, password });
-
-    setCargando(false);
-
-    if (errorLogin) {
-      setError('Email o contraseña incorrectos.');
-      return;
-    }
-
-    router.push('/mis-ordenes');
-    router.refresh();
-  };
+export default async function LoginPage({ searchParams }) {
+  const { error } = await searchParams;
 
   return (
-    <section className="auth-page">
-      <h1>INICIAR SESIÓN</h1>
-      <form onSubmit={handleSubmit} noValidate>
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="tu@email.com"
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
-            required
-          />
-        </div>
-        {error && <p className="error" role="alert">{error}</p>}
-        <button type="submit" className="btn-primary" disabled={cargando}>
-          {cargando ? 'INGRESANDO...' : 'INGRESAR'}
-        </button>
-      </form>
-      <p>¿No tenés cuenta? <Link href="/registro">Creá una</Link></p>
-    </section>
+    <AuthShell
+      titulo="Bienvenido"
+      bajada="Iniciá sesión para ver tus órdenes y comprar más rápido."
+      pie={<>¿No tenés cuenta? <Link href="/registro">Creá una</Link></>}
+    >
+      <LoginForm errorInicial={ERRORES[error] ?? ''} />
+    </AuthShell>
   );
 }

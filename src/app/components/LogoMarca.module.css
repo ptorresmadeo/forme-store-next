@@ -1,0 +1,23 @@
+/* Recorte del área útil de logo-forme.png (≈ x 7.5%–92.5%, y 32%–74%).
+   El ancho se toma de --logo-ancho (lo define quien usa el componente) en
+   vez de declarar "width" acá: si dos módulos CSS declaran "width" sobre el
+   mismo elemento gana el que se cargó último, y con navegación client-side
+   ese orden cambia (el logo aparecía gigante al volver desde /login). */
+.wrap {
+  position: relative;
+  display: block;
+  width: var(--logo-ancho, 100%);
+  max-width: 100%;
+  aspect-ratio: 2.02 / 1;
+  overflow: hidden;
+}
+
+.img {
+  position: absolute;
+  width: 117.6%;
+  max-width: none;
+  left: -8.8%;
+  top: -76%;
+  /* El PNG tiene fondo blanco: multiply lo funde con fondos claros. */
+  mix-blend-mode: multiply;
+}
